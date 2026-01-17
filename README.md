@@ -1,72 +1,12 @@
-# Deep Learning Lab - SPR-2548533
-
-## Lab 1: XOR Neural Network Implementation
-
-This lab implements a simple neural network to solve the XOR problem using three different deep learning frameworks.
-
-### Implementations
-
-1. **Keras** ([keras.py](keras.py))
-   - Uses Keras Sequential API
-   - 8 hidden neurons with tanh activation
-   - Sigmoid output layer
-   - Adam optimizer with learning rate 0.5
-
-2. **PyTorch** ([pytorch.py](pytorch.py))
-   - Manual implementation using PyTorch layers
-   - 8 hidden neurons with tanh activation
-   - Sigmoid output layer
-   - SGD optimizer with learning rate 0.5
-
-3. **TensorFlow** ([tensorflow.py](tensorflow.py))
-   - Low-level TensorFlow implementation
-   - Manual weight initialization and gradient descent
-   - 8 hidden neurons with tanh activation
-   - Sigmoid output layer
-
-### Requirements
-
-```bash
-pip install numpy matplotlib tensorflow torch
-```
-
-### Running the Code
-
-Each file can be run independently:
-
-```bash
-python keras.py
-python pytorch.py
-python tensorflow.py
-```
-
-### Output
-
-Each implementation produces:
-- Predictions for the XOR problem
-- Decision boundary visualization
-- Training loss curve
-
-### XOR Problem
-
-The XOR (exclusive OR) problem is a classic non-linearly separable problem:
-
-| Input 1 | Input 2 | Output |
-|---------|---------|--------|
-| 0       | 0       | 0      |
-| 0       | 1       | 1      |
-| 1       | 0       | 1      |
-| 1       | 1       | 0      |
-
----
-
-## Lab 2: Fashion MNIST Classification with Neural Networks
+# Deep Learning Lab 2 - Fashion MNIST Classification
 
 **Student:** Aashish Joyson
 **ID:** 2548533
 **Course:** Deep Learning Laboratory
 
-### Overview
+---
+
+## Overview
 
 This lab implements a neural network classifier for the Fashion MNIST dataset using PyTorch. The project explores various aspects of deep learning including:
 - Neural network architecture design
@@ -77,7 +17,7 @@ This lab implements a neural network classifier for the Fashion MNIST dataset us
 
 ---
 
-### Dataset
+## Dataset
 
 **Fashion MNIST** contains 70,000 grayscale images (28x28 pixels) of 10 different clothing categories:
 - T-shirt/top
@@ -97,9 +37,9 @@ This lab implements a neural network classifier for the Fashion MNIST dataset us
 
 ---
 
-### Model Architecture
+## Model Architecture
 
-#### FashionClassifier (Funnel Design)
+### FashionClassifier (Funnel Design)
 A 4-layer fully connected neural network with progressively decreasing layer sizes:
 
 ```
@@ -118,9 +58,9 @@ Output Layer:    10 neurons (10 classes)
 
 ---
 
-### Experiments and Results
+## Experiments and Results
 
-#### Experiment 1: Basic Training (10 Epochs)
+### Experiment 1: Basic Training (10 Epochs)
 
 **Training Progress:**
 ```
@@ -145,7 +85,7 @@ Epoch [10/10] -> Loss: 0.2290 | Accuracy: 91.41%
 
 ---
 
-#### Experiment 2: Activation Function Comparison (20 Epochs)
+### Experiment 2: Activation Function Comparison (20 Epochs)
 
 Compared three activation functions: **ReLU**, **Sigmoid**, and **Tanh**
 
@@ -166,7 +106,7 @@ Compared three activation functions: **ReLU**, **Sigmoid**, and **Tanh**
 
 ---
 
-#### Experiment 3: Overfitting Stress Test (20 Epochs)
+### Experiment 3: Overfitting Stress Test (20 Epochs)
 
 Extended training to 20 epochs to observe overfitting behavior.
 
@@ -187,7 +127,7 @@ Extended training to 20 epochs to observe overfitting behavior.
 
 ---
 
-### Advanced Task: Network Activation Visualization
+## Advanced Task: Network Activation Visualization
 
 Visualized internal layer activations to understand what the network "sees":
 
@@ -208,7 +148,7 @@ Visualized internal layer activations to understand what the network "sees":
 
 ---
 
-### Requirements
+## Requirements
 
 ```bash
 pip install torch torchvision matplotlib numpy
@@ -223,9 +163,9 @@ pip install torch torchvision matplotlib numpy
 
 ---
 
-### Usage
+## Usage
 
-#### Run the complete experiment:
+### Run the complete experiment:
 ```bash
 python aashishjoyson_2548533_dl_lab2.py
 ```
@@ -241,7 +181,7 @@ The script will:
 
 ---
 
-### Key Takeaways
+## Key Takeaways
 
 1. **Architecture Matters:** The funnel design (784→256→128→64→10) effectively compresses spatial information for classification
 
@@ -255,7 +195,7 @@ The script will:
 
 ---
 
-### Results Summary
+## Results Summary
 
 | Metric | Value |
 |--------|-------|
@@ -268,22 +208,7 @@ The script will:
 
 ---
 
-### File Structure
-
-```
-SPR-2548533/
-├── LAB1/                                  # Lab 1 branch
-│   ├── keras.py
-│   ├── pytorch.py
-│   └── tensorflow.py
-└── LAB2/                                  # Lab 2 branch (this)
-    ├── aashishjoyson_2548533_dl_lab2.py
-    └── README.md
-```
-
----
-
-### Future Improvements
+## Future Improvements
 
 1. Add dropout layers to reduce overfitting
 2. Implement learning rate scheduling
@@ -293,7 +218,7 @@ SPR-2548533/
 
 ---
 
-### Author
+## Author
 
 **Aashish Joyson** (2548533)
 Deep Learning Laboratory
@@ -301,6 +226,6 @@ SPR Course
 
 ---
 
-### License
+## License
 
 This project is for educational purposes as part of the Deep Learning Laboratory coursework.
