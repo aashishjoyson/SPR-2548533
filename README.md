@@ -1,4 +1,4 @@
-# Deep Learning Lab 2 - Fashion MNIST Classification
+# Deep Learning Lab 3 - Regularization Techniques
 
 **Student:** Aashish Joyson
 **ID:** 2548533
@@ -8,156 +8,140 @@
 
 ## Overview
 
-This lab implements a neural network classifier for the Fashion MNIST dataset using PyTorch. The project explores various aspects of deep learning including:
-- Neural network architecture design
-- Training and evaluation workflows
-- Activation function comparison
-- Overfitting detection and analysis
-- Network activation visualization
+This lab implements and compares regularization techniques applied to a neural network binary classifier. The project explores how different regularization strategies affect training dynamics, weight distribution, and generalization performance.
 
 ---
 
 ## Dataset
 
-**Fashion MNIST** contains 70,000 grayscale images (28x28 pixels) of 10 different clothing categories:
-- T-shirt/top
-- Trouser
-- Pullover
-- Dress
-- Coat
-- Sandal
-- Shirt
-- Sneaker
-- Bag
-- Ankle boot
+**Breast Cancer Wisconsin Dataset** (from scikit-learn)
+
+- **Total samples:** 569
+- **Features:** 30 numerical features (mean, standard error, worst values of cell nucleus properties)
+- **Task:** Binary classification — Malignant (0) vs Benign (1)
 
 **Split:**
-- Training set: 60,000 images
-- Test set: 10,000 images
+- Training set: 455 samples
+- Test set: 114 samples
 
 ---
 
 ## Model Architecture
 
-### FashionClassifier (Funnel Design)
-A 4-layer fully connected neural network with progressively decreasing layer sizes:
+### NeuralNet (Binary Classifier)
 
 ```
-Input Layer:    784 neurons (28×28 flattened image)
-Hidden Layer 1: 256 neurons + ReLU
-Hidden Layer 2: 128 neurons + ReLU
-Hidden Layer 3:  64 neurons + ReLU
-Output Layer:    10 neurons (10 classes)
+Input Layer:    30 neurons (breast cancer features)
+Hidden Layer 1: 64 neurons + ReLU
+Hidden Layer 2: 32 neurons + ReLU
+Output Layer:    1 neuron  + Sigmoid (binary classification)
 ```
 
-**Architecture Features:**
-- Funnel design: Progressively compresses information from 784 → 10
-- ReLU activation for non-linearity
-- CrossEntropyLoss for multi-class classification
-- Adam optimizer with learning rate 0.001
+- **Loss Function:** Binary Cross Entropy (BCELoss)
+- **Optimizer:** Adam (lr = 0.001)
+- **Training Epochs:** 60
 
 ---
 
-## Experiments and Results
+## Experiments
 
-### Experiment 1: Basic Training (10 Epochs)
+### Experiment 1: No Regularization
 
-**Training Progress:**
+Baseline model trained without any regularization penalty.
+
 ```
-Epoch [1/10]  -> Loss: 0.5229 | Accuracy: 80.86%
-Epoch [2/10]  -> Loss: 0.3794 | Accuracy: 86.01%
-Epoch [3/10]  -> Loss: 0.3381 | Accuracy: 87.63%
-Epoch [4/10]  -> Loss: 0.3157 | Accuracy: 88.28%
-Epoch [5/10]  -> Loss: 0.2949 | Accuracy: 89.10%
-Epoch [6/10]  -> Loss: 0.2787 | Accuracy: 89.67%
-Epoch [7/10]  -> Loss: 0.2641 | Accuracy: 90.16%
-Epoch [8/10]  -> Loss: 0.2503 | Accuracy: 90.69%
-Epoch [9/10]  -> Loss: 0.2415 | Accuracy: 90.86%
-Epoch [10/10] -> Loss: 0.2290 | Accuracy: 91.41%
+Epoch [10/60] | Train Loss: 0.0561 | Test Loss: 0.0556 | Test Acc: 0.9825
+Epoch [30/60] | Train Loss: 0.0180 | Test Loss: 0.0693 | Test Acc: 0.9737
+Epoch [60/60] | Train Loss: 0.0044 | Test Loss: 0.0879 | Test Acc: 0.9825
 ```
 
-**Final Results:**
-- **Training Accuracy:** 91.41%
-- **Test Accuracy:** 87.73%
-- **Generalization Gap:** 3.68%
-
-**Conclusion:** The model generalizes well with no significant overfitting detected.
+**Observation:** Training loss continuously drops while test loss rises — classic overfitting.
 
 ---
 
-### Experiment 2: Activation Function Comparison (20 Epochs)
+### Experiment 2: L2 Regularization (weight_decay = 0.01)
 
-Compared three activation functions: **ReLU**, **Sigmoid**, and **Tanh**
+L2 penalty discourages large weights via the Adam optimizer's `weight_decay` parameter.
 
-**Key Findings:**
+```
+Epoch [10/60] | Train Loss: 0.0718 | Test Loss: 0.0686 | Test Acc: 0.9912
+Epoch [30/60] | Train Loss: 0.0465 | Test Loss: 0.0577 | Test Acc: 0.9912
+Epoch [60/60] | Train Loss: 0.0397 | Test Loss: 0.0587 | Test Acc: 0.9912
+```
 
-| Activation | Convergence Speed | Final Performance | Issues |
-|------------|------------------|-------------------|--------|
-| **ReLU** | ✅ Fast | ✅ Best | None |
-| **Tanh** | 🟡 Moderate | 🟡 Good | Slower than ReLU |
-| **Sigmoid** | ❌ Very Slow | ❌ Poor | Vanishing gradient problem |
-
-**Winner: ReLU**
-- Fastest convergence
-- No vanishing gradient issues
-- Best choice for deep networks
-
-**Sigmoid Struggled:** The sigmoid function showed very slow learning in early epochs due to the vanishing gradient problem, making it unsuitable for deep networks.
+**Observation:** Stable test loss throughout training. Best generalization.
 
 ---
 
-### Experiment 3: Overfitting Stress Test (20 Epochs)
+### Experiment 3: L1 Regularization (l1_lambda = 0.0005)
 
-Extended training to 20 epochs to observe overfitting behavior.
+L1 penalty added manually to loss, encouraging sparse weight distributions.
 
-**Key Observations:**
+```
+Epoch [10/60] | Train Loss: 0.0795 | Test Loss: 0.0631 | Test Acc: 0.9825
+Epoch [30/60] | Train Loss: 0.0362 | Test Loss: 0.0528 | Test Acc: 0.9825
+Epoch [60/60] | Train Loss: 0.0257 | Test Loss: 0.0563 | Test Acc: 0.9737
+```
 
-**Epoch 1-10:** Both training and test loss decrease together → Healthy learning
-
-**Epoch 12+:**
-- Training loss continues to decrease
-- **Test loss starts increasing** ⚠️ (Overfitting detected!)
-
-**Final Metrics:**
-- **Training Accuracy:** Continues improving
-- **Test Accuracy:** Plateaus and slightly degrades
-- **Overfitting Point:** Around Epoch 12
-
-**Conclusion:** The optimal stopping point is **10 epochs**. Beyond this, the model begins memorizing the training data rather than learning generalizable patterns.
+**Observation:** High sparsity (2427/4000 weights near zero). Slightly lower accuracy due to aggressive feature selection.
 
 ---
 
-## Advanced Task: Network Activation Visualization
+### Experiment 4: Elastic Net (l1_lambda = 0.0005, l2_lambda = 0.01)
 
-Visualized internal layer activations to understand what the network "sees":
+Combines both L1 and L2 penalties for balanced regularization.
 
-**Layer 1 (256 neurons):**
-- Detects basic features: edges, lines, contours
-- Recognizes fundamental shape outlines (e.g., shoe silhouette)
+```
+Epoch [10/60] | Train Loss: 0.0934 | Test Loss: 0.0813 | Test Acc: 0.9912
+Epoch [30/60] | Train Loss: 0.0619 | Test Loss: 0.0680 | Test Acc: 0.9912
+Epoch [60/60] | Train Loss: 0.0507 | Test Loss: 0.0606 | Test Acc: 0.9912
+```
 
-**Layer 2 (128 neurons):**
-- Combines basic features into patterns
-- Recognizes textures and partial shapes
+**Observation:** Highest sparsity (3040/4000 weights near zero) with strong test accuracy.
 
-**Layer 3 (64 neurons):**
-- High-level abstract features
-- Class-discriminative patterns
-- Final decision-making representations
+---
 
-**Insight:** The network follows a hierarchical feature learning approach—from simple edges to complex semantic patterns.
+## Results Summary
+
+| Method        | Train Accuracy | Test Accuracy | Test Loss | Near-Zero Weights |
+|---------------|---------------|--------------|-----------|------------------|
+| No Reg        | 99.78%        | 98.25%       | 0.0879    | 18 / 4000        |
+| L2            | 99.12%        | **99.12%**   | 0.0587    | 168 / 4000       |
+| L1            | 99.34%        | 97.37%       | 0.0563    | 2427 / 4000      |
+| Elastic Net   | 98.90%        | **99.12%**   | 0.0606    | 3040 / 4000      |
+
+---
+
+## Weight Statistics Comparison
+
+| Method      | Mean     | Std Dev  | Near-Zero |
+|-------------|----------|----------|-----------|
+| No Reg      | 0.0174   | 0.1386   | 18        |
+| L2          | 0.0090   | 0.0522   | 168       |
+| L1          | 0.0101   | 0.0710   | 2427      |
+| Elastic Net | 0.0052   | 0.0480   | 3040      |
+
+---
+
+## Key Takeaways
+
+1. **No Regularization → Overfitting:** Training loss drops aggressively but test loss rises, indicating memorization
+2. **L2 → Best Generalization:** Stable test accuracy and loss throughout training; controls weight magnitude
+3. **L1 → Sparsity:** Pushes weights to zero for implicit feature selection, slightly lower accuracy
+4. **Elastic Net → Best of Both:** Combines sparsity from L1 and weight control from L2, achieves highest sparsity with strong accuracy
 
 ---
 
 ## Requirements
 
 ```bash
-pip install torch torchvision matplotlib numpy
+pip install torch torchvision matplotlib scikit-learn numpy
 ```
 
 **Dependencies:**
 - Python 3.7+
-- PyTorch 1.9+
-- torchvision
+- PyTorch
+- scikit-learn
 - matplotlib
 - numpy
 
@@ -165,56 +149,18 @@ pip install torch torchvision matplotlib numpy
 
 ## Usage
 
-### Run the complete experiment:
+Open and run the notebook:
+
 ```bash
-python aashishjoyson_2548533_dl_lab2.py
+jupyter notebook 2548533_DL_Lab3.ipynb
 ```
 
-The script will:
-1. Download Fashion MNIST dataset automatically
-2. Train the base model (10 epochs)
-3. Generate training loss and accuracy plots
-4. Evaluate on test set
-5. Run activation function comparison
-6. Perform overfitting stress test
-7. Visualize network activations
-
----
-
-## Key Takeaways
-
-1. **Architecture Matters:** The funnel design (784→256→128→64→10) effectively compresses spatial information for classification
-
-2. **ReLU is Superior:** For deep networks, ReLU outperforms sigmoid and tanh due to its resistance to vanishing gradients
-
-3. **Early Stopping is Critical:** Training beyond 10 epochs causes overfitting. Monitoring validation loss is essential
-
-4. **Hierarchical Learning:** Neural networks learn in stages—low-level features (edges) → mid-level patterns → high-level semantic concepts
-
-5. **Generalization Check:** A 3-4% gap between train and test accuracy indicates healthy generalization
-
----
-
-## Results Summary
-
-| Metric | Value |
-|--------|-------|
-| Final Training Accuracy | 91.41% |
-| Final Test Accuracy | 87.73% |
-| Optimal Epochs | 10 |
-| Best Activation | ReLU |
-| Model Parameters | ~235,000 |
-| Training Time | ~2-3 minutes (CPU) |
-
----
-
-## Future Improvements
-
-1. Add dropout layers to reduce overfitting
-2. Implement learning rate scheduling
-3. Try convolutional layers (CNN) for better feature extraction
-4. Experiment with batch normalization
-5. Add data augmentation (rotation, shift, zoom)
+The notebook will:
+1. Load and preprocess the Breast Cancer dataset
+2. Train models with No Reg, L2, L1, and Elastic Net regularization
+3. Plot test loss and accuracy comparisons
+4. Analyze weight distributions and sparsity
+5. Print final performance summary
 
 ---
 
