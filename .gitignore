@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+runs/
+data/
+african-wildlife/
+yolov5/
+*.zip
