@@ -347,7 +347,8 @@ openpyxl==3.1.2
 ---
 
 ## 👤 Author
-
+**Mathi Aashish Joyson**
+---
 **M.Sc. AIML — PG III Trimester**  
 Christ (Deemed to be University), Bangalore — 560 029  
 Course: MAI417-3 Deep Learning  
